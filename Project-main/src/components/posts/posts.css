@@ -1,0 +1,12 @@
+.posts {
+  /* flex: 9; */
+  display: flex;
+  flex-wrap: wrap;
+  margin: 20px;
+}
+.posts > div {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  justify-content: center;
+}
