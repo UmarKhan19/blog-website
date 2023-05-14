@@ -16,17 +16,10 @@ img {
   /* border-radius: 50%; */
   gap: 3px;
 }
-.btn {
-  width: 120px;
-  height: 35px;
-  background-color: aliceblue;
-  border-radius: 9px;
-  cursor: pointer;
-  margin-left: 15px;
+.btnDiv {
+  flex-direction: row !important;
 }
-.btn:hover {
-  background-color: teal;
-}
+
 .heading {
   display: flex;
   align-items: center;

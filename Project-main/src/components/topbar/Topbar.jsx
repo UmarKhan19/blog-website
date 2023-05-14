@@ -5,11 +5,11 @@ import { useEffect, useState } from "react";
 
 export default function Topbar() {
   const [token, setToken] = useState(null);
+  const storedToken = Cookie.get("token");
 
   useEffect(() => {
-    const storedToken = Cookie.get("token");
     setToken(storedToken);
-  }, [token]);
+  }, [storedToken]);
   return (
     <div className="top">
       <div className="topLeft">

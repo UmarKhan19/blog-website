@@ -1,37 +1,45 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { formatTimeAgo } from "../../formatDate";
 import "./authorProfile.css";
 import image from "./profile.jpg";
 import image2 from "./Image8.jpg";
+import Card from "../../components/card/Card";
 
 const AuthorProfile = () => {
   const { id } = useParams();
   const [author, setAuthor] = useState(null);
   const [loggedInUser, setLoggedInUser] = useState(null);
   const [follower, setFollower] = useState(null);
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    axios
+  const fetchAuthor = async () => {
+    await axios
       .get(`http://localhost:4000/user/${id}`)
       .then((data) => {
         setAuthor(data.data.user);
-        console.log("useEffect");
       })
       .catch((error) => console.log(error));
-    axios
-      .get("http://localhost:4000/user", { withCredentials: "includes" })
-      .then((data) => setLoggedInUser(data.data.user))
-      .catch((error) => console.log(error));
-  }, [id]);
+  };
 
   useEffect(() => {
-    if (loggedInUser?.following) {
-      setFollower(loggedInUser?.following.includes(id));
-      console.log("dusra useEffect");
-    }
-  }, [id, loggedInUser?.following]);
+    fetchAuthor();
+    axios
+      .get("http://localhost:4000/user", { withCredentials: "includes" })
+      .then((data) => {
+        setLoggedInUser(data.data.user);
+      })
+      .catch((error) => {
+        return console.log(error);
+      }); // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
+  // useEffect(() => {
+  //   if (loggedInUser?.following) {
+  //     setFollower(loggedInUser?.following.includes(id));
+  //     console.log("dusra useEffect");
+  //   }
+  // }, [id, loggedInUser?.following]);
 
   const followUser = async () => {
     await axios
@@ -42,8 +50,10 @@ const AuthorProfile = () => {
       )
       .then(() => setFollower(!follower))
       .catch((error) => console.log(error));
+    fetchAuthor();
   };
 
+  if (author?._id === loggedInUser?._id) navigate("/Profile");
   return (
     <div className="containerAuthorProfile">
       <div className="upperDiv">
@@ -51,6 +61,10 @@ const AuthorProfile = () => {
         <div className="details">
           <h3 className="username">{author?.username}</h3>
           <div className="detailsUpper">
+            <div>
+              <h5>Blogs</h5>
+              <p>{author?.blogs.length}</p>
+            </div>
             <div>
               <h5>Followers</h5>
               <p>{author?.followers.length}</p>
@@ -61,7 +75,7 @@ const AuthorProfile = () => {
             </div>
             <div>
               <button className="followBtn" onClick={followUser}>
-                {follower ? "Unfollow" : "Follow"}
+                {follower ? "Follow" : "Unfollow"}
               </button>
             </div>
           </div>
@@ -78,22 +92,7 @@ const AuthorProfile = () => {
         <h3>Blog Posts</h3>
         <div className="blogs">
           {author?.blogs.map((blog) => {
-            return (
-              <Link to={`/post/${blog._id}`} className="blog" key={blog._id}>
-                <img className="blogImg" src={image2} alt="blog" />
-                <div className="blogDetails">
-                  <h4 className="blogTitle">{blog.title}</h4>
-                  <p className="blogContent">{blog.content}</p>
-                  <div className="blogLowerDetails">
-                    <div className="blogUserDetails">
-                      <img className="blogAuthorImg" src={image} alt="user" />
-                      <p className="blogUsername">{author.username}</p>
-                    </div>
-                    <p className="blogDate">{formatTimeAgo(blog.createdAt)}</p>
-                  </div>
-                </div>
-              </Link>
-            );
+            return <Card blog={blog} author={author} key={blog._id} />;
           })}
         </div>
       </div>

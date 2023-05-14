@@ -6,9 +6,14 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
+import { toast } from "react-toastify";
 
 const Register = () => {
   const navigate = useNavigate();
+  const { token } = Cookies?.get();
+
+  if (token) navigate(-1);
 
   const schema = yup.object().shape({
     email: yup
@@ -33,10 +38,11 @@ const Register = () => {
         { withCredentials: true }
       )
       .then(function (response) {
-        navigate("/");
+        navigate("/Profile");
+        toast.success(response.data.message);
       })
       .catch(function (error) {
-        console.log(error.response.data);
+        toast.error(error.response.data.message, { autoClose: 2000 });
       });
   };
   return (

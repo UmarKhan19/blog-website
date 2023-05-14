@@ -71,3 +71,7 @@
   height: 80px;
   animation: spin 1s linear infinite;
 }
+
+.blogs > div {
+  width: 33% !important;
+}

@@ -1,9 +1,8 @@
 // import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import axios from "axios";
 import "./post.css";
 import { useEffect, useState } from "react";
-import { formatTimeAgo } from "../../formatDate";
+import Card from "../card/Card";
 
 export default function Post({ img }) {
   const [blogs, setBlogs] = useState([]);
@@ -31,26 +30,10 @@ export default function Post({ img }) {
           <p>No blog!!</p>{" "}
         </div>
       ) : (
-        <div>
+        <div className="blogs">
           {" "}
           {blogs.map((blog) => {
-            return (
-              <Link to={`/post/${blog._id}`} className="post" key={blog._id}>
-                <img className="postImg" src={img} alt="" />
-                <div className="postInfo">
-                  <div className="postCats">
-                    <span className="postCat">Music</span>
-                    <span className="postCat">Life</span>
-                  </div>
-                  <span className="postTitle">{blog.title}</span>
-                  <hr />
-                  <span className="postDate">
-                    {formatTimeAgo(blog.createdAt)}
-                  </span>
-                </div>
-                <p className="postDesc">{blog.content}</p>
-              </Link>
-            );
+            return <Card blog={blog} author={blog.author} key={blog._id} />;
           })}
         </div>
       )}

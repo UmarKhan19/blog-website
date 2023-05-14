@@ -276,3 +276,31 @@ export const uploadImg = (req, res) => {
     res.status(500).json({ success: false, message: "Server error" });
   }
 };
+
+// FETCH ALL THE COMMENTS OF A BLOG
+export const getBlogComment = async (req, res) => {
+  try {
+    const { blogId } = req.params;
+
+    // Find the blog by its ID
+    const blog = await blogModel.findById(blogId);
+
+    if (!blog) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Blog not found" });
+    }
+
+    // Find all comments associated with the blog
+    const comments = await Comment.find({
+      parentType: "blog",
+      parentId: blogId,
+    })
+      .sort({ createdAt: -1 })
+      .populate("author");
+
+    res.status(200).json({ success: true, comments });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};

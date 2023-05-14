@@ -5,7 +5,7 @@ import Tweet from "../models/tweetSchema.js";
 import blogModel from "../models/blogModel.js";
 import Comment from "../models/commentSchema.js";
 
-// REGISTERING A USER
+// REGISTER USER
 export const registerUser = async (req, res) => {
   const { username, email, password } = req.body;
 
@@ -17,6 +17,13 @@ export const registerUser = async (req, res) => {
       return res
         .status(409)
         .json({ message: "Username or email already exists" });
+    }
+
+    // Check if the email is from "@cuchd.in" domain
+    if (!email.endsWith("@cuchd.in")) {
+      return res.status(400).json({
+        message: "Invalid email domain. Only @cuchd.in emails are allowed",
+      });
     }
 
     // Hash the password
@@ -75,14 +82,14 @@ export const loginUser = async (req, res) => {
     const user = await User.findOne({ email }).select("+password");
 
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ message: "Invalid credentials" });
     }
 
     // Compare the provided password with the stored password
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
-      return res.status(401).json({ message: "Invalid password" });
+      return res.status(401).json({ message: "Invalid credentials" });
     }
     // Generate a token for the user
     const token = jwt.sign({ userId: user._id }, "jwtsecretkey");
@@ -130,6 +137,21 @@ export const updateUser = async (req, res) => {
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
+    }
+
+    if (username && username.length < 4) {
+      return res
+        .status(400)
+        .json({ message: "Username must be at least 4 characters long" });
+    }
+
+    // Check if the email is from "@cuchd.in" domain
+    if (email && !email.endsWith("@cuchd.in")) {
+      return res
+        .status(400)
+        .json({
+          message: "Invalid email domain. Only @cuchd.in emails are allowed",
+        });
     }
 
     user.username = username || user.username;

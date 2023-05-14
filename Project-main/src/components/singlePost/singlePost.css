@@ -1,5 +1,5 @@
 .singlePost {
-  flex: 9;
+  /* flex: 9; */
   padding-top: 3rem;
 }
 
@@ -43,6 +43,7 @@
   margin-bottom: 20px;
   display: flex;
   justify-content: space-between;
+  align-items: center;
   font-size: 16px;
   color: #be9656;
   font-family: "Varela Round", Arial, Helvetica, sans-serif;
@@ -55,11 +56,26 @@
 .singlePostDesc {
   color: #666;
   font-size: 18px;
-  line-height: 25px;
+  line-height: 2rem;
 }
 
 .singlePostDesc::first-letter {
   margin-left: 20px;
   font-size: 30px;
   font-weight: 600;
+}
+
+.likeSpan {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.likeBtn {
+  background-color: transparent;
+  border: none;
+  transition: 0.2s;
+  cursor: pointer;
+  font-size: 1.5rem;
+  transform: scaleX(-1);
 }

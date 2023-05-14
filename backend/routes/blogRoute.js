@@ -4,6 +4,7 @@ import {
   deleteBlog,
   deleteComment,
   getAllBlogs,
+  getBlogComment,
   getSingleBlog,
   increaseLikes,
   postBlog,
@@ -26,7 +27,7 @@ router
 router.put("/blog/:id/like", authenticationToken, increaseLikes);
 router.post("/blog/:id/addcomment", authenticationToken, addComment);
 router.delete("/comment/delete/:id", authenticationToken, deleteComment);
-
+router.get("/blog/:blogId/comments", getBlogComment);
 router.post("/file", uploadImg);
 
 export default router;

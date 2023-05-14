@@ -99,3 +99,7 @@
 .settingsSubmitButton:hover {
   background-color: rgb(1, 114, 114);
 }
+
+.error {
+  color: red;
+}

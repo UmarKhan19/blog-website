@@ -5,8 +5,11 @@ import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import Cookie from "js-cookie";
+import { toast } from "react-toastify";
 
 function App() {
+  const token = Cookie.get("token");
   const navigate = useNavigate();
 
   const schema = yup.object().shape({
@@ -31,12 +34,15 @@ function App() {
         { withCredentials: true }
       )
       .then(function (response) {
+        toast.success(response.data.message);
         navigate("/");
       })
       .catch(function (error) {
-        console.log(error.response.data);
+        toast.error(error.response.data.message);
       });
   };
+
+  if (token) navigate("/");
 
   return (
     <div className="loginForm">
@@ -58,6 +64,7 @@ function App() {
             id="password"
             type="password"
             placeholder="Enter your password"
+            autoComplete="on"
             {...register("password")}
           />
           {errors.password && <p>{errors.password.message}</p>}
