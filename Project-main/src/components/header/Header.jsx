@@ -1,4 +1,5 @@
 import "./header.css";
+import video from "./pexels-mart-production-8865362-2560x1440-50fps.mp4";
 
 export default function Header() {
   return (
@@ -7,11 +8,9 @@ export default function Header() {
         <span className="headerTitleSm">React & Node</span>
         <span className="headerTitleLg">BLOG</span>
       </div>
-      <img
-        className="headerImg"
-        src="https://images.pexels.com/photos/1167355/pexels-photo-1167355.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
-        alt=""
-      />
+      <video className="headerImg" autoplay playsInline loop muted>
+        <source src={video} type="video/mp4" />
+      </video>
     </div>
   );
 }

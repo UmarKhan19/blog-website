@@ -5,9 +5,14 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Card from "../card/Card";
 import { toast } from "react-toastify";
+import FollowerModal from "../followerModal/FollowerModal";
 
 const Profile = () => {
   const [user, setUser] = useState({});
+  const [followers, setFollowers] = useState(null);
+  const [following, setFollowing] = useState(null);
+  const [followerModal, setFollowerModal] = useState(false);
+  const [followingModal, setFollowingModal] = useState(false);
   const navigate = useNavigate();
   const logout = async () => {
     await axios
@@ -42,6 +47,23 @@ const Profile = () => {
         console.log(error);
       });
   }, []);
+
+  const handleFollowing = async () => {
+    await axios
+      .get(`http://localhost:4000/user/${user?._id}/following`, {
+        withCredentials: "includes",
+      })
+      .then((response) => setFollowing(response.data?.following))
+      .then((error) => toast.success(error?.response?.data?.message));
+  };
+  const handleFollowers = async () => {
+    await axios
+      .get(`http://localhost:4000/user/${user?._id}/followers`, {
+        withCredentials: "includes",
+      })
+      .then((response) => setFollowers(response?.data?.followers))
+      .then((error) => toast.success(error?.response?.data?.message));
+  };
   return (
     <div className="containerAuthorProfile">
       <div className="upperDiv">
@@ -53,11 +75,25 @@ const Profile = () => {
               <h5>Blogs</h5>
               <p>{user?.blogs?.length}</p>
             </div>
-            <div>
+            <div
+              onClick={() => {
+                handleFollowers();
+                setFollowerModal(!followerModal);
+                setFollowingModal(false);
+              }}
+              className="followerDiv"
+            >
               <h5>Followers</h5>
               <p>{user?.followers?.length}</p>
             </div>
-            <div>
+            <div
+              className="followerDiv"
+              onClick={() => {
+                handleFollowing();
+                setFollowerModal(false);
+                setFollowingModal(!followingModal);
+              }}
+            >
               <h5>Following</h5>
               <p>{user?.following?.length}</p>
             </div>
@@ -87,6 +123,12 @@ const Profile = () => {
           })}
         </div>
       </div>
+      {followerModal ? (
+        <FollowerModal followers={followers} status="followers" />
+      ) : null}
+      {followingModal ? (
+        <FollowerModal followers={following} status={"following"} />
+      ) : null}
     </div>
   );
 };

@@ -2,6 +2,8 @@ import express from "express";
 import {
   followUser,
   getAllUser,
+  getFollowers,
+  getFollowing,
   getFollowingBlogs,
   getLoggedInUser,
   getOwnBlogs,
@@ -9,17 +11,25 @@ import {
   getSingleUserBlogs,
   getSingleUserTweets,
   getUserComments,
+  getUserFollowers,
+  getUserFollowing,
   getUserLikedBlogs,
   getUserLikedTweets,
   loginUser,
   logoutUser,
   registerUser,
+  searchUsers,
   updateUser,
 } from "../controllers/userController.js";
 import { authenticationToken } from "../utils/authenticationToken.js";
 
 const router = express.Router();
 
+router.get("/users/search/:query", searchUsers);
+router.get("/user/followers", authenticationToken, getUserFollowers);
+router.get("/user/:id/followers", authenticationToken, getFollowers);
+router.get("/user/following", authenticationToken, getUserFollowing);
+router.get("/user/:id/following", authenticationToken, getFollowing);
 router.post("/user/register", registerUser);
 router.get("/user/myblogs", authenticationToken, getOwnBlogs);
 router.get("/user/:id", getSingleUser);

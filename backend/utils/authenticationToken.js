@@ -6,9 +6,7 @@ export const authenticationToken = async (req, res, next) => {
     const { token } = req.cookies;
 
     if (!token) {
-      return res
-        .status(401)
-        .json({ message: "Authentication failed. Token not provided." });
+      return res.status(401).json({ message: "Login to access." });
     }
 
     const decodedToken = jwt.verify(token, "jwtsecretkey");

@@ -1,17 +1,22 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { formatTimeAgo } from "../../formatDate";
+import { useNavigate, useParams } from "react-router-dom";
 import "./authorProfile.css";
 import image from "./profile.jpg";
-import image2 from "./Image8.jpg";
 import Card from "../../components/card/Card";
+import { toast } from "react-toastify";
+import FollowerModal from "../../components/followerModal/FollowerModal";
 
 const AuthorProfile = () => {
   const { id } = useParams();
   const [author, setAuthor] = useState(null);
+  const [followerModal, setFollowerModal] = useState(false);
+  const [followingModal, setFollowingModal] = useState(false);
   const [loggedInUser, setLoggedInUser] = useState(null);
   const [follower, setFollower] = useState(null);
+  const [followers, setFollowers] = useState(null);
+  const [following, setFollowing] = useState(null);
+
   const navigate = useNavigate();
 
   const fetchAuthor = async () => {
@@ -24,16 +29,20 @@ const AuthorProfile = () => {
   };
 
   useEffect(() => {
-    fetchAuthor();
-    axios
-      .get("http://localhost:4000/user", { withCredentials: "includes" })
-      .then((data) => {
-        setLoggedInUser(data.data.user);
-      })
-      .catch((error) => {
-        return console.log(error);
-      }); // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id]);
+    const data = async () => {
+      await fetchAuthor();
+      await axios
+        .get("http://localhost:4000/user", { withCredentials: "includes" })
+        .then((data) => {
+          setLoggedInUser(data.data.user);
+        })
+        .catch((error) => {
+          return console.log(error);
+        });
+    };
+    data();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [follower]);
   // useEffect(() => {
   //   if (loggedInUser?.following) {
   //     setFollower(loggedInUser?.following.includes(id));
@@ -48,9 +57,28 @@ const AuthorProfile = () => {
         {},
         { withCredentials: "includes" }
       )
-      .then(() => setFollower(!follower))
-      .catch((error) => console.log(error));
+      .then(() => {
+        setFollower(!follower);
+      })
+      .catch((error) => toast.error(error?.response?.data?.message));
     fetchAuthor();
+  };
+
+  const handleFollowing = async () => {
+    await axios
+      .get(`http://localhost:4000/user/${author?._id}/following`, {
+        withCredentials: "includes",
+      })
+      .then((response) => setFollowing(response.data?.following))
+      .then((error) => toast.success(error?.response?.data?.message));
+  };
+  const handleFollowers = async () => {
+    await axios
+      .get(`http://localhost:4000/user/${author?._id}/followers`, {
+        withCredentials: "includes",
+      })
+      .then((response) => setFollowers(response?.data?.followers))
+      .then((error) => toast.success(error?.response?.data?.message));
   };
 
   if (author?._id === loggedInUser?._id) navigate("/Profile");
@@ -65,17 +93,31 @@ const AuthorProfile = () => {
               <h5>Blogs</h5>
               <p>{author?.blogs.length}</p>
             </div>
-            <div>
+            <div
+              onClick={() => {
+                handleFollowers();
+                setFollowerModal(!followerModal);
+                setFollowingModal(false);
+              }}
+              className="followerDiv"
+            >
               <h5>Followers</h5>
               <p>{author?.followers.length}</p>
             </div>
-            <div>
+            <div
+              className="followerDiv"
+              onClick={() => {
+                handleFollowing();
+                setFollowerModal(false);
+                setFollowingModal(!followingModal);
+              }}
+            >
               <h5>Following</h5>
               <p>{author?.following.length}</p>
             </div>
             <div>
               <button className="followBtn" onClick={followUser}>
-                {follower ? "Follow" : "Unfollow"}
+                {!follower ? "Unfollow" : "Follow"}
               </button>
             </div>
           </div>
@@ -96,6 +138,12 @@ const AuthorProfile = () => {
           })}
         </div>
       </div>
+      {followerModal ? (
+        <FollowerModal followers={followers} status="followers" />
+      ) : null}
+      {followingModal ? (
+        <FollowerModal followers={following} status={"following"} />
+      ) : null}
     </div>
   );
 };

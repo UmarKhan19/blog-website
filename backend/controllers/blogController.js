@@ -304,3 +304,23 @@ export const getBlogComment = async (req, res) => {
     res.status(500).json({ success: false, message: "Server error" });
   }
 };
+
+// SEARCH BLOG
+export const searchBlogs = async (req, res) => {
+  const { query } = req.params;
+
+  try {
+    // Search for blogs using the query
+    const blogs = await blogModel.find({
+      $or: [
+        { title: { $regex: query, $options: "i" } },
+        { content: { $regex: query, $options: "i" } },
+      ],
+    });
+
+    res.status(200).json({ success: true, blogs });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};

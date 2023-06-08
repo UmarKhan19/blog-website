@@ -54,7 +54,7 @@ const Comments = () => {
         { withCredentials: "includes" }
       )
       .then((response) => toast.success(response.data.message))
-      .catch((error) => console.log(error));
+      .catch((error) => toast.error(error.response.data.message));
     setCommentValue("");
     fetchComments();
   };

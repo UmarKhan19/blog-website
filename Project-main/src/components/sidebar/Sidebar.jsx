@@ -26,25 +26,13 @@ export default function Sidebar() {
       <div className="sidebarItem">
         <span className="sidebarTitle">INFO</span>
         <ul className="sidebarList">
+          <li className="sidebarListItem">Username : {user?.username}</li>
+          <li className="sidebarListItem">Email : {user?.email}</li>
           <li className="sidebarListItem">
-            <Link className="link" to="/posts?cat=Life">
-              Username : {user?.username}
-            </Link>
+            Followers : {user?.followers.length}
           </li>
           <li className="sidebarListItem">
-            <Link className="link" to="/posts?cat=Music">
-              Email : {user?.email}
-            </Link>
-          </li>
-          <li className="sidebarListItem">
-            <Link className="link" to="/posts?cat=Sport">
-              Followers : {user?.followers.length}
-            </Link>
-          </li>
-          <li className="sidebarListItem">
-            <Link className="link" to="/posts?cat=Sport">
-              Following : {user?.following.length}
-            </Link>
+            Following : {user?.following.length}
           </li>
         </ul>
       </div>

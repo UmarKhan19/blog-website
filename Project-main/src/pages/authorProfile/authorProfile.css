@@ -123,3 +123,10 @@
 .blogDate {
   font-weight: 600;
 }
+
+.followerDiv:hover {
+  cursor: pointer;
+}
+.followerDiv {
+  user-select: none;
+}

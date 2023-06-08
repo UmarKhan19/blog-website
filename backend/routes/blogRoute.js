@@ -8,6 +8,7 @@ import {
   getSingleBlog,
   increaseLikes,
   postBlog,
+  searchBlogs,
   updateBlog,
   uploadImg,
 } from "../controllers/blogController.js";
@@ -29,5 +30,6 @@ router.post("/blog/:id/addcomment", authenticationToken, addComment);
 router.delete("/comment/delete/:id", authenticationToken, deleteComment);
 router.get("/blog/:blogId/comments", getBlogComment);
 router.post("/file", uploadImg);
+router.get("/blogs/search/:query", searchBlogs);
 
 export default router;

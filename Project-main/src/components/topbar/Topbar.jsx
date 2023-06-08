@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import "./topbar.css";
+import image from "../followerModal/profile.jpg";
 import Cookie from "js-cookie";
 import { useEffect, useState } from "react";
 
@@ -28,7 +29,6 @@ export default function Topbar() {
             </Link>
           </li>
           <li className="topListItem">
-            {" "}
             <Link className="link" to="/Blog">
               BLOG
             </Link>
@@ -38,16 +38,17 @@ export default function Topbar() {
               WRITE
             </Link>
           </li>
+          <li className="topListItem">
+            <Link className="link" to="/explore">
+              EXPLORE
+            </Link>
+          </li>
         </ul>
       </div>
       <div className="topRight">
         {token ? (
           <Link className="link name" to="/Profile">
-            <img
-              className="topImg"
-              src="https://images.pexels.com/photos/1858175/pexels-photo-1858175.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500"
-              alt=""
-            />
+            <img className="topImg" src={image} alt="" />
             Profile
           </Link>
         ) : (

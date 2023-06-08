@@ -12,6 +12,7 @@ import Write from "./pages/write/Write";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Protected from "./components/Protected";
 import AuthorProfile from "./pages/authorProfile/AuthorProfile";
+import Explore from "./pages/explore/Explore";
 
 function App() {
   // const currentUser = false;
@@ -37,6 +38,7 @@ function App() {
         ></Route>
         <Route path="/Login" element={<Login />}></Route>
         <Route path="/register" element={<Register />}></Route>
+        <Route path="/explore" element={<Explore />}></Route>
         <Route path="/post/:id" element={<Single />}></Route>
         <Route path="/write" element={<Protected Component={Write} />}></Route>
         <Route
